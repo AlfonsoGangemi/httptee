@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -28,6 +28,12 @@ func PrintDiff(diff []diffmatchpatch.Diff) {
 	if len(output) > 0 {
 		log.Println("Headers differ:\n" + output)
 	}
+}
+
+func PrintDiffBody(splita, splitb []string) {
+	differ := diffmatchpatch.New()
+	diffbody := differ.DiffMain(splita[1],splitb[1],true)
+	log.Debug(differ.DiffPrettyText(differ.DiffCleanupEfficiency(diffbody)))
 }
 
 func Handle(conn *net.TCPConn) {
@@ -99,6 +105,7 @@ func Handle(conn *net.TCPConn) {
 				PrintDiff(diff)
 				if splita[1] != splitb[1] {
 					log.Println("Response body differs")
+					PrintDiffBody(splita, splitb)
 				}
 			} else {
 				log.Warn("Response missing")
