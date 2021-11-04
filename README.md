@@ -4,9 +4,11 @@ Tee http diff server for comparing how backends respond to requests.
 **httptee** will respond to all requests by proxying them to the *base* backend.
 The requests are also sent to the *compare* backend to be diffed.
 
+tested with go1.17.2 on Ubuntu_18.04
+
 ## Usage
 ```
-$ go install github.com/xthexder/httptee
+$ go install github.com/AlfonsoGangemi/httptee
 
 $ httptee --help
 Usage of httptee:
@@ -15,6 +17,23 @@ Usage of httptee:
   -compare=":8082": secondary upstream host to proxy
   -verbose=false: verbose logging
 ```
+
+### Run local
+Download the go script
+```
+$ go mod init local/httptee
+$ go get github.com/sergi/go-diff/diffmatchpatch
+$ go get github.com/sirupsen/logrus
+
+$ go run . --help
+
+$ go run . -base="server-a:80" -compare="server-b:80" -verbose
+```
+call service (via browser or curl)
+```
+curl -s -o /dev/null http://localhost:8080/path?id=116&type=X
+```
+
 
 ## Example
 Server:
